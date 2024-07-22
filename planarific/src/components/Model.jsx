@@ -1,6 +1,31 @@
+import { useEffect, useRef } from 'react';
 import { useGLTF } from '@react-three/drei/native';
 
-export default function Model({ currentType }) {
-  const { scene } = useGLTF('crisp.glb');
-  return <primitive object={scene} rotation={[0, -Math.PI / 2, 0]} />;
+export function Model({ model, wireframe }) {
+  const ref = useRef();
+  const gltf = useGLTF(model);
+
+  useEffect(() => {
+    if (gltf.scene) {
+      gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+          child.material.wireframe = wireframe;
+        }
+      });
+    }
+  }, [model, wireframe]);
+
+
+  if (!gltf.scene) {
+    return null;
+  }
+
+  return (
+    <primitive
+      ref={ref}
+      object={gltf.scene}
+      rotation={[0, 0, 0]}
+      wireframe={true}
+    />
+  );
 }
