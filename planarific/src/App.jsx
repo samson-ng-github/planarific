@@ -89,7 +89,8 @@ function App() {
       <ModelList getNewModel={getNewModel} />
       {model ? (
         <div id="metadata">
-          {model.address1} {model.address2} • {model.city} • {model.state} •{' '}
+          {model.address1} {model.address2}<span id="desktop-only">{' • '}</span><br id="mobile-only" />
+          {model.city} • {model.state ? `${model.state} • ` : null}
           {model.postal_code}
         </div>
       ) : null}
