@@ -11,7 +11,6 @@ const config = {
 };
 
 const getLogo = () => {
-  console.log(import.meta.env.VITE_REACT_APP_API_TOKEN);
   return api
     .get('/planarific.webp', { ...config, responseType: 'blob' })
     .then((res) => {
