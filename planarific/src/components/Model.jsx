@@ -31,7 +31,6 @@ export function Model({ model, wireframe, clickCoords, setClickCoords }) {
     mouse.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.current.setFromCamera(mouse.current, camera);
     const intersects = raycaster.current.intersectObjects(scene.children, true);
-    console.log(clickCoords);
     if (intersects.length)
       setClickCoords([
         intersects[0].point.x,

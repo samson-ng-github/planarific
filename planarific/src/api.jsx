@@ -1,17 +1,38 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://fedevtest.azurewebsites.net',
 });
 
 const config = {
-  headers: { Authorization: 'Bearer PASSWORD' },
+  headers: { Authorization: 'Bearer 7MgoynPHf5raP8BhstcQ3PT7nnbDjqyXSQsP8iTX' },
 };
 
-const getModel = () => {
-  return api.get('/v1/models/3', config).then((res) => {
+const getLogo = () => {
+  return api
+    .get('/planarific.webp', { ...config, responseType: 'blob' })
+    .then((res) => {
+      return URL.createObjectURL(res.data);
+    });
+};
+
+const getModels = () => {
+  return api.get('/v1/models', config).then((res) => {
+    return res.data;
+  });
+};
+
+const getModel = (url = '/v1/models/1') => {
+  return api.get(url, config).then((res) => {
+    console.log(res.data);
     return res.data.model;
   });
 };
 
-export { getModel };
+const getThumb = (url = '/thumbs/1.png') => {
+  return api.get(url, { ...config, responseType: 'blob' }).then((res) => {
+    return URL.createObjectURL(res.data);
+  });
+};
+
+export { getLogo, getModels, getModel, getThumb };
