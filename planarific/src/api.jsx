@@ -24,8 +24,7 @@ const getModels = () => {
 
 const getModel = (url = '/v1/models/1') => {
   return api.get(url, config).then((res) => {
-    console.log(res.data);
-    return res.data.model;
+    return res.data;
   });
 };
 

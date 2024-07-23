@@ -6,13 +6,19 @@ import { Model } from './components/Model.jsx';
 import { Lightings } from './components/Lightings.jsx';
 import { Glow } from './components/Glow.jsx';
 import { Logo } from './components/Logo.jsx';
+import { Background } from './components/Background.jsx';
 import { ModelList } from './components/ModelList.jsx';
-import { getModels, getModel, getThumb } from './api';
 import * as THREE from 'three';
+import { getModel } from './api';
+import resetIcon from './assets/reset.png';
+import wireframeIcon from './assets/wireframe.png';
+import coordinateIcon from './assets/coordinate.png';
+import { Icon } from './components/Icon.jsx';
 
 function App() {
   const [model, setModel] = useState('');
   const [wireframe, setWireframe] = useState(false);
+  const [isCameraMoved, setIsCameraMoved] = useState(false);
   const [clickCoords, setClickCoords] = useState(null);
   const orbitref = useRef();
 
@@ -27,7 +33,7 @@ function App() {
   }, []);
 
   const getNewModel = (url) => {
-    console.log(url);
+    setClickCoords(null);
     getModel(url)
       .then((data) => {
         setModel(data);
@@ -37,28 +43,29 @@ function App() {
       });
   };
 
+  const resetCamera = () => {
+    orbitref.current.reset();
+    setClickCoords(null);
+    setIsCameraMoved(false);
+  };
+
+  const toggleWireframe = () => {
+    setWireframe(!wireframe);
+  };
+
+  const handleControlsChange = () => {
+    setIsCameraMoved(true);
+  };
+
   return (
     <>
-      {/* <button
-        onClick={() => {
-          orbitref.current.reset();
-        }}
-      >
-        Reset camera
-      </button>
-      <button onClick={() => setWireframe(!wireframe)}>Toggle Wireframe</button>
-      <div>
-        {`x:${clickCoords ? clickCoords[0].toFixed(2) : null} y:${
-          clickCoords ? clickCoords[1].toFixed(2) : null
-        }  z:${clickCoords ? clickCoords[2].toFixed(2) : null} `}
-      </div>
-       */}
-      <Canvas camera={{ position: [20, 20, 20] }}>
+      <Canvas camera={{ position: [50, 30, 0], fov: 75 }}>
+        <Background />
         <Lightings />
         <Suspense fallback={null}>
           <Center>
             <Model
-              model={model}
+              model={model.model}
               wireframe={wireframe}
               clickCoords={clickCoords}
               setClickCoords={setClickCoords}
@@ -69,6 +76,8 @@ function App() {
         <OrbitControls
           makeDefault
           ref={orbitref}
+          maxDistance={400}
+          onChange={handleControlsChange}
           mouseButtons={{
             LEFT: THREE.MOUSE.ROTATE,
             MIDDLE: THREE.MOUSE.DOLLY,
@@ -77,7 +86,35 @@ function App() {
         />
       </Canvas>
       <Logo />
-      <ModelList getNewModel={getNewModel}/>
+      <ModelList getNewModel={getNewModel} />
+      {model ? (
+        <div id="metadata">
+          {model.address1} {model.address2} • {model.city} • {model.state} •{' '}
+          {model.postal_code}
+        </div>
+      ) : null}
+      <div id="icon-list">
+        <Icon
+          src={wireframeIcon}
+          colorDependent={wireframe}
+          onClick={toggleWireframe}
+        />
+        <Icon
+          src={resetIcon}
+          colorDependent={isCameraMoved}
+          onClick={resetCamera}
+        />
+        <Icon src={coordinateIcon} colorDependent={clickCoords} />
+        {clickCoords ? (
+          <div className="coordinates">{clickCoords[0].toFixed(2)}</div>
+        ) : null}
+        {clickCoords ? (
+          <div className="coordinates">{clickCoords[1].toFixed(2)}</div>
+        ) : null}
+        {clickCoords ? (
+          <div className="coordinates">{clickCoords[2].toFixed(2)}</div>
+        ) : null}
+      </div>
     </>
   );
 }

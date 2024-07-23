@@ -44,6 +44,7 @@ export function Model({ model, wireframe, clickCoords, setClickCoords }) {
       ref={ref}
       object={gltf.scene}
       rotation={[0, 0, 0]}
+      position={[0, 10, 0]}
       wireframe={true}
       onClick={handleClick}
     />

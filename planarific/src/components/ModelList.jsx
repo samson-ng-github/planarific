@@ -28,7 +28,7 @@ export function ModelList({ getNewModel }) {
       {models.map((model) => {
         return (
           <ModelThumb
-            id={model.id}
+            key={model.id}
             description={model.description}
             blob={model.blob}
             id={model.id}
