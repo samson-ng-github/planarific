@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Center } from '@react-three/drei';
@@ -62,7 +62,7 @@ function App() {
       <Canvas camera={{ position: [50, 30, 0], fov: 75 }}>
         <Background />
         <Lightings />
-        <Suspense fallback={null}>
+        {model ? (
           <Center>
             <Model
               model={model.model}
@@ -71,7 +71,7 @@ function App() {
               setClickCoords={setClickCoords}
             />
           </Center>
-        </Suspense>
+        ) : null}
         {clickCoords ? <Glow clickCoords={clickCoords} /> : null}
         <OrbitControls
           makeDefault

@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { getModels, getThumb } from '../api';
 import { ModelThumb } from './ModelThumb';
 
@@ -25,17 +25,19 @@ export function ModelList({ getNewModel }) {
 
   return (
     <ul id="model-list">
-      {models.map((model) => {
-        return (
-          <ModelThumb
-            key={model.id}
-            description={model.description}
-            blob={model.blob}
-            id={model.id}
-            getNewModel={getNewModel}
-          />
-        );
-      })}
+      {models
+        ? models.map((model) => {
+            return (
+              <ModelThumb
+                key={model.id}
+                description={model.description}
+                blob={model.blob}
+                id={model.id}
+                getNewModel={getNewModel}
+              />
+            );
+          })
+        : null}
     </ul>
   );
 }

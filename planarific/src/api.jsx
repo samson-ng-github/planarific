@@ -5,10 +5,13 @@ const api = axios.create({
 });
 
 const config = {
-  headers: { Authorization: 'Bearer 7MgoynPHf5raP8BhstcQ3PT7nnbDjqyXSQsP8iTX' },
+  headers: {
+    Authorization: `Bearer ${import.meta.env.VITE_REACT_APP_API_TOKEN}`,
+  },
 };
 
 const getLogo = () => {
+  console.log(import.meta.env.VITE_REACT_APP_API_TOKEN);
   return api
     .get('/planarific.webp', { ...config, responseType: 'blob' })
     .then((res) => {

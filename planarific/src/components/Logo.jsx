@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { getLogo } from '../api';
 
 export function Logo() {
@@ -12,9 +12,5 @@ export function Logo() {
         console.log(err);
       });
   }, []);
-  return (
-    <Suspense fallback={null}>
-      <img id="logo" src={logo}></img>
-    </Suspense>
-  );
+  return <>{logo ? <img id="logo" src={logo}></img> : null}</>;
 }
