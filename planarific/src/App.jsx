@@ -75,7 +75,7 @@ function App() {
             ) : null}
           </Center>
         </Suspense>
-        <Glow clickCoords={clickCoords} />
+        {clickCoords ? <Glow clickCoords={clickCoords} /> : null}
         <OrbitControls
           makeDefault
           ref={orbitref}
@@ -90,7 +90,7 @@ function App() {
       <CircularLoader />
       <Logo />
       <ModelList getNewModel={getNewModel} />
-      <Metadata model={model} />
+      {model ? <Metadata model={model} /> : null}
       <IconList
         wireframeIcon={wireframeIcon}
         wireframe={wireframe}

@@ -1,5 +1,4 @@
 export function Metadata({ model }) {
-  if (!model) return null;
   return (
     <div id="metadata">
       {model.address1} {model.address2}

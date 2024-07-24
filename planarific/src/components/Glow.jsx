@@ -1,5 +1,4 @@
 export function Glow({ clickCoords }) {
-  if (!clickCoords) return null;
   return (
     <group>
       <mesh position={clickCoords}>
