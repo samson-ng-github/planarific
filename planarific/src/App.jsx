@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import './App.css';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Center } from '@react-three/drei';
@@ -14,6 +14,7 @@ import resetIcon from './assets/reset.png';
 import wireframeIcon from './assets/wireframe.png';
 import coordinateIcon from './assets/coordinate.png';
 import { Icon } from './components/Icon.jsx';
+import { CircularLoader } from './components/CircularLoader.jsx';
 
 function App() {
   const [model, setModel] = useState('');
@@ -53,6 +54,10 @@ function App() {
     setWireframe(!wireframe);
   };
 
+  const resetClickCoords = () => {
+    setClickCoords(null);
+  };
+
   const handleControlsChange = () => {
     setIsCameraMoved(true);
   };
@@ -62,16 +67,18 @@ function App() {
       <Canvas camera={{ position: [50, 30, 0], fov: 75 }}>
         <Background />
         <Lightings />
-        {model ? (
-          <Center>
-            <Model
-              model={model.model}
-              wireframe={wireframe}
-              clickCoords={clickCoords}
-              setClickCoords={setClickCoords}
-            />
-          </Center>
-        ) : null}
+        <Suspense>
+          {model ? (
+            <Center>
+              <Model
+                model={model.model}
+                wireframe={wireframe}
+                clickCoords={clickCoords}
+                setClickCoords={setClickCoords}
+              />
+            </Center>
+          ) : null}
+        </Suspense>
         {clickCoords ? <Glow clickCoords={clickCoords} /> : null}
         <OrbitControls
           makeDefault
@@ -85,11 +92,14 @@ function App() {
           }}
         />
       </Canvas>
+      <CircularLoader />
       <Logo />
       <ModelList getNewModel={getNewModel} />
       {model ? (
         <div id="metadata">
-          {model.address1} {model.address2}<span id="desktop-only">{' • '}</span><br id="mobile-only" />
+          {model.address1} {model.address2}
+          <span id="desktop-only">{' • '}</span>
+          <br id="mobile-only" />
           {model.city} • {model.state ? `${model.state} • ` : null}
           {model.postal_code}
         </div>
@@ -105,7 +115,11 @@ function App() {
           colorDependent={isCameraMoved}
           onClick={resetCamera}
         />
-        <Icon src={coordinateIcon} colorDependent={clickCoords} />
+        <Icon
+          src={coordinateIcon}
+          colorDependent={clickCoords}
+          onClick={resetClickCoords}
+        />
         {clickCoords ? (
           <div className="coordinates">{clickCoords[0].toFixed(2)}</div>
         ) : null}
