@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, Suspense } from 'react';
 import './App.css';
+import * as THREE from 'three';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Center } from '@react-three/drei';
 import { Model } from './components/Model.jsx';
@@ -8,13 +9,13 @@ import { Glow } from './components/Glow.jsx';
 import { Logo } from './components/Logo.jsx';
 import { Background } from './components/Background.jsx';
 import { ModelList } from './components/ModelList.jsx';
-import * as THREE from 'three';
+import { CircularLoader } from './components/CircularLoader.jsx';
+import { Metadata } from './components/Metadata.jsx';
+import { IconList } from './components/IconList.jsx';
 import { getModel } from './api';
 import resetIcon from './assets/reset.png';
 import wireframeIcon from './assets/wireframe.png';
 import coordinateIcon from './assets/coordinate.png';
-import { Icon } from './components/Icon.jsx';
-import { CircularLoader } from './components/CircularLoader.jsx';
 
 function App() {
   const [model, setModel] = useState('');
@@ -69,18 +70,16 @@ function App() {
         <Background />
         <Lightings />
         <Suspense>
-          {model ? (
-            <Center>
-              <Model
-                model={model.model}
-                wireframe={wireframe}
-                clickCoords={clickCoords}
-                setClickCoords={setClickCoords}
-              />
-            </Center>
-          ) : null}
+          <Center>
+            <Model
+              model={model.model}
+              wireframe={wireframe}
+              clickCoords={clickCoords}
+              setClickCoords={setClickCoords}
+            />
+          </Center>
         </Suspense>
-        {clickCoords ? <Glow clickCoords={clickCoords} /> : null}
+        <Glow clickCoords={clickCoords} />
         <OrbitControls
           makeDefault
           ref={orbitref}
@@ -96,41 +95,18 @@ function App() {
       <CircularLoader />
       <Logo />
       <ModelList getNewModel={getNewModel} />
-      {model ? (
-        <div id="metadata">
-          {model.address1} {model.address2}
-          <span id="desktop-only">{' • '}</span>
-          <br id="mobile-only" />
-          {model.city} • {model.state ? `${model.state} • ` : null}
-          {model.postal_code}
-        </div>
-      ) : null}
-      <div id="icon-list">
-        <Icon
-          src={wireframeIcon}
-          colorDependent={wireframe}
-          onClick={toggleWireframe}
-        />
-        <Icon
-          src={resetIcon}
-          colorDependent={isCameraMoved}
-          onClick={resetCamera}
-        />
-        <Icon
-          src={coordinateIcon}
-          colorDependent={clickCoords}
-          onClick={resetClickCoords}
-        />
-        {clickCoords ? (
-          <div className="coordinates">{clickCoords[0].toFixed(2)}</div>
-        ) : null}
-        {clickCoords ? (
-          <div className="coordinates">{clickCoords[1].toFixed(2)}</div>
-        ) : null}
-        {clickCoords ? (
-          <div className="coordinates">{clickCoords[2].toFixed(2)}</div>
-        ) : null}
-      </div>
+      <Metadata model={model} />
+      <IconList
+        wireframeIcon={wireframeIcon}
+        wireframe={wireframe}
+        toggleWireframe={toggleWireframe}
+        resetIcon={resetIcon}
+        isCameraMoved={isCameraMoved}
+        resetCamera={resetCamera}
+        coordinateIcon={coordinateIcon}
+        clickCoords={clickCoords}
+        resetClickCoords={resetClickCoords}
+      />
     </>
   );
 }

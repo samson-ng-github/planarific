@@ -39,6 +39,8 @@ export function Model({ model, wireframe, clickCoords, setClickCoords }) {
       ]);
   };
 
+  if (!model) return null;
+  
   return (
     <primitive
       ref={ref}
