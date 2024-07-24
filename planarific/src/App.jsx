@@ -15,13 +15,18 @@ import wireframeIcon from './assets/wireframe.png';
 import coordinateIcon from './assets/coordinate.png';
 import { Icon } from './components/Icon.jsx';
 import { CircularLoader } from './components/CircularLoader.jsx';
+import { AnimatedControls } from './components/AnimatedControls.jsx';
 
 function App() {
   const [model, setModel] = useState('');
   const [wireframe, setWireframe] = useState(false);
   const [isCameraMoved, setIsCameraMoved] = useState(false);
   const [clickCoords, setClickCoords] = useState(null);
-  const orbitref = useRef();
+  const [initialCameraState, setInitialCameraState] = useState({
+    position: [30, 30, 0],
+    rotation: [0, 0, 0],
+  });
+  const [resetFlag, setResetFlag] = useState(false);
 
   useEffect(() => {
     getModel()
@@ -45,7 +50,8 @@ function App() {
   };
 
   const resetCamera = () => {
-    orbitref.current.reset();
+    setResetFlag(true);
+    setTimeout(() => setResetFlag(false), 100);
     setClickCoords(null);
     setIsCameraMoved(false);
   };
@@ -64,7 +70,12 @@ function App() {
 
   return (
     <>
-      <Canvas camera={{ position: [50, 30, 0], fov: 75 }}>
+      <Canvas>
+        <AnimatedControls
+          initialCameraState={initialCameraState}
+          handleControlsChange={handleControlsChange}
+          resetFlag={resetFlag}
+        />
         <Background />
         <Lightings />
         <Suspense>
@@ -80,9 +91,8 @@ function App() {
           ) : null}
         </Suspense>
         {clickCoords ? <Glow clickCoords={clickCoords} /> : null}
-        <OrbitControls
+        {/* <OrbitControls
           makeDefault
-          ref={orbitref}
           maxDistance={400}
           onChange={handleControlsChange}
           mouseButtons={{
@@ -90,7 +100,7 @@ function App() {
             MIDDLE: THREE.MOUSE.DOLLY,
             RIGHT: THREE.MOUSE.PAN,
           }}
-        />
+        /> */}
       </Canvas>
       <CircularLoader />
       <Logo />
