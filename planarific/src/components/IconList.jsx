@@ -6,7 +6,6 @@ export function IconList(props) {
     wireframe,
     toggleWireframe,
     resetIcon,
-    isCameraMoved,
     resetCamera,
     coordinateIcon,
     clickCoords,
@@ -15,14 +14,13 @@ export function IconList(props) {
   return (
     <div id="icon-list">
       <Icon
+        src={resetIcon}
+        onClick={resetCamera}
+      />
+      <Icon
         src={wireframeIcon}
         colorDependent={wireframe}
         onClick={toggleWireframe}
-      />
-      <Icon
-        src={resetIcon}
-        colorDependent={isCameraMoved}
-        onClick={resetCamera}
       />
       <Icon
         src={coordinateIcon}

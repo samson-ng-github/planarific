@@ -20,7 +20,6 @@ import coordinateIcon from './assets/coordinate.png';
 function App() {
   const [model, setModel] = useState('');
   const [wireframe, setWireframe] = useState(false);
-  const [isCameraMoved, setIsCameraMoved] = useState(false);
   const [clickCoords, setClickCoords] = useState(null);
   const orbitref = useRef();
 
@@ -48,7 +47,6 @@ function App() {
   const resetCamera = () => {
     orbitref.current.reset();
     setClickCoords(null);
-    setIsCameraMoved(false);
     setWireframe(false);
   };
 
@@ -60,10 +58,6 @@ function App() {
     setClickCoords(null);
   };
 
-  const handleControlsChange = () => {
-    setIsCameraMoved(true);
-  };
-
   return (
     <>
       <Canvas camera={{ position: [50, 30, 0], fov: 75 }}>
@@ -71,12 +65,14 @@ function App() {
         <Lightings />
         <Suspense>
           <Center>
-            <Model
-              model={model.model}
-              wireframe={wireframe}
-              clickCoords={clickCoords}
-              setClickCoords={setClickCoords}
-            />
+            {model ? (
+              <Model
+                model={model.model}
+                wireframe={wireframe}
+                clickCoords={clickCoords}
+                setClickCoords={setClickCoords}
+              />
+            ) : null}
           </Center>
         </Suspense>
         <Glow clickCoords={clickCoords} />
@@ -84,7 +80,6 @@ function App() {
           makeDefault
           ref={orbitref}
           maxDistance={400}
-          onChange={handleControlsChange}
           mouseButtons={{
             LEFT: THREE.MOUSE.ROTATE,
             MIDDLE: THREE.MOUSE.DOLLY,
@@ -101,7 +96,6 @@ function App() {
         wireframe={wireframe}
         toggleWireframe={toggleWireframe}
         resetIcon={resetIcon}
-        isCameraMoved={isCameraMoved}
         resetCamera={resetCamera}
         coordinateIcon={coordinateIcon}
         clickCoords={clickCoords}
