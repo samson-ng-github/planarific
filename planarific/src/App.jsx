@@ -34,10 +34,10 @@ function App() {
   }, []);
 
   const getNewModel = (url) => {
-    setClickCoords(null);
     getModel(url)
       .then((data) => {
         setModel(data);
+        resetCamera();
       })
       .catch((err) => {
         console.log(err);
@@ -48,6 +48,7 @@ function App() {
     orbitref.current.reset();
     setClickCoords(null);
     setIsCameraMoved(false);
+    setWireframe(false);
   };
 
   const toggleWireframe = () => {
